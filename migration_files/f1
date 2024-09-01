@@ -1,0 +1,27 @@
+
+begin;
+CREATE TABLE 
+IF NOT EXISTS csv_file(
+  id UUID PRIMARY KEY,
+  status TEXT DEFAULT 'in-process',
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  completed_at TIMESTAMP 
+);
+
+CREATE TABLE 
+IF NOT EXISTS file_product(
+  id UUID PRIMARY KEY,
+  product_name TEXT UNIQUE,
+  file_id UUID REFERENCES csv_file(id) ON DELETE CASCADE
+);
+
+CREATE TABLE 
+IF NOT EXISTS product_images(
+    id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+    product_id UUID REFERENCES file_product(id) ON DELETE CASCADE,
+    input_image_url TEXT,
+    output_image_url TEXT
+);
+
+
+commit;
